@@ -5,11 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:one_to_one_chat_app/common/models/user_model.dart';
+import 'package:one_to_one_chat_app/common/screens/mobile_layout_screen.dart';
 import 'package:one_to_one_chat_app/common/utils/utils.dart';
 import 'package:one_to_one_chat_app/features/auth/screens/login_screen.dart';
 import 'package:one_to_one_chat_app/features/auth/screens/otp_screen.dart';
 import 'package:one_to_one_chat_app/features/auth/screens/setup_profile_screen.dart';
-import 'package:one_to_one_chat_app/features/chat/screens/main_screen.dart';
+
+import '../../../common/repositories/common_firebase_storage_repositor.dart';
 
 final authRepositoryprovider = Provider((ref) => AuthRepository(
     auth: FirebaseAuth.instance, fireStore: FirebaseFirestore.instance));
@@ -96,12 +98,12 @@ class AuthRepository {
           'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png';
 
       if (profilePic != null) {
-        // photoUrl = await ref
-        //     .read(commonFirebaseStorageRepositoryProvider)
-        //     .storeFileToFirebase(
-        //       'profilePic/$uid',
-        //       profilePic,
-        //     );
+        photoUrl = await ref
+            .read(commonFirebaseStorageRepositoryProvider)
+            .storeFileToFirebase(
+              'profilePic/$uid',
+              profilePic,
+            );
       }
 
       // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -125,7 +127,7 @@ class AuthRepository {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const MainLayoutScreen(),
+          builder: (context) => const MobileLayoutScreen(),
         ),
         (route) => false,
       );
@@ -171,9 +173,7 @@ class AuthRepository {
             });
       }
     } catch (e) {
-      showSnackBar(
-          context: context,
-          content: e.toString()); // TODO: show dialog with error
+      showSnackBar(context: context, content: e.toString());
     }
   }
 }

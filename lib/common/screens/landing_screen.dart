@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:one_to_one_chat_app/common/constants/colors.dart';
+import 'package:one_to_one_chat_app/common/constants/text.dart';
 import 'package:one_to_one_chat_app/features/auth/screens/login_screen.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -9,10 +11,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  void navigateToLoginScreen(BuildContext ctx) {
-    // Navigator.pushNamed(ctx, LoginScreen.routeName);
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -24,17 +22,16 @@ class _LandingScreenState extends State<LandingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "One to One Chat App",
-                style: TextStyle(
+              Text(
+                appName,
+                style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
                     fontSize: 20),
               ),
               Image.asset(
-                'assets/landing_image.jpg',
+                landingImageUrl,
                 width: size.width * 1,
-                // color: Colors.blue,
               ),
               const SizedBox(
                 height: 50,
@@ -48,13 +45,12 @@ class _LandingScreenState extends State<LandingScreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.red),
-                  child: const Padding(
-                    padding: EdgeInsets.all(16.0),
+                      borderRadius: BorderRadius.circular(50), color: redColor),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      "Click and Continue",
-                      style: TextStyle(color: Colors.white),
+                      clickAndContinue,
+                      style: TextStyle(color: whiteColor),
                     ),
                   ),
                 ),

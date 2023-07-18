@@ -6,7 +6,6 @@ import 'package:one_to_one_chat_app/common/config/text_style.dart';
 import 'package:one_to_one_chat_app/common/utils/utils.dart';
 import 'package:one_to_one_chat_app/common/widgets/box/vertical_box.dart';
 import 'package:one_to_one_chat_app/features/auth/controllers/auth_controller.dart';
-import 'package:one_to_one_chat_app/features/chat/screens/main_screen.dart';
 // import 'package:whatsapp_ui/common/config/text_style.dart';
 // import 'package:whatsapp_ui/common/utils/utils.dart';
 // import 'package:whatsapp_ui/common/widgets/box/vertical_box.dart';
@@ -50,16 +49,24 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
             name,
             image,
           );
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const MainLayoutScreen()));
-    } else {
-      // showSnackBar(context: context, content: 'Please Select Your Photo');
-    }
+    } else {}
     Future.delayed(const Duration(milliseconds: 2000), () {
       isLoading = false;
       setState(() {});
     });
-    // Restart.restartApp();
+  }
+
+  setUpProfileOnChanged(String value) {
+    if (value.isEmpty) {
+      isButtonEnable = false;
+      setState(() {});
+    } else if (RegExp(r"\s").hasMatch(value)) {
+      isButtonEnable = false;
+      setState(() {});
+    } else {
+      isButtonEnable = true;
+      setState(() {});
+    }
   }
 
   @override
@@ -148,16 +155,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                 cursorWidth: 1.2,
                 cursorColor: Colors.black,
                 onChanged: (value) {
-                  if (value.isEmpty) {
-                    isButtonEnable = false;
-                    setState(() {});
-                  } else if (RegExp(r"\s").hasMatch(value)) {
-                    isButtonEnable = false;
-                    setState(() {});
-                  } else {
-                    isButtonEnable = true;
-                    setState(() {});
-                  }
+                  setUpProfileOnChanged(value);
                 },
                 style: authScreensubTitleStyle().copyWith(fontSize: 15),
               ),

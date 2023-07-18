@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:one_to_one_chat_app/common/config/text_style.dart';
+import 'package:one_to_one_chat_app/common/constants/text.dart';
 import 'package:one_to_one_chat_app/common/widgets/box/vertical_box.dart';
 import 'package:one_to_one_chat_app/features/auth/controllers/auth_controller.dart';
 import 'package:one_to_one_chat_app/features/auth/widgets/otp_field.dart';
@@ -32,6 +33,7 @@ class OTPScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(''),
         elevation: 0,
       ),
@@ -41,7 +43,7 @@ class OTPScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Enter your OTP",
+              enterOTP,
               style: authScreenheadingStyle(),
             ),
             const VerticalBox(height: 16),
@@ -52,7 +54,7 @@ class OTPScreen extends ConsumerWidget {
                   style: authScreensubTitleStyle(),
                 ),
                 Text(
-                  "    $phoneNumber",
+                  " $phoneNumber",
                   style: authScreensubTitleStyle().copyWith(
                       color: const Color.fromRGBO(237, 84, 60, 1),
                       fontSize: 14),

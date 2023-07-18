@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:one_to_one_chat_app/common/config/size_config.dart';
 import 'package:one_to_one_chat_app/common/config/theme.dart';
 import 'package:one_to_one_chat_app/common/screens/landing_screen.dart';
+import 'package:one_to_one_chat_app/common/screens/mobile_layout_screen.dart';
 import 'package:one_to_one_chat_app/features/auth/controllers/auth_controller.dart';
-import 'package:one_to_one_chat_app/features/chat/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,21 +21,21 @@ class MyApp extends ConsumerWidget {
     SizeConfig().init(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Chat App',
       theme: Themes().lightTheme(context),
       home: ref.watch(userdataProvider).when(
           data: (user) {
             if (user == null) {
               return const LandingScreen();
             } else {
-              return const MainLayoutScreen();
+              return const MobileLayoutScreen();
             }
           },
           error: (error, trace) {
-            print(error.toString());
             return ErrorWidget(error.toString());
           },
-          loading: () => const Scaffold(body: CircularProgressIndicator())),
+          loading: () =>
+              const Scaffold(body: Center(child: CircularProgressIndicator()))),
     );
   }
 }

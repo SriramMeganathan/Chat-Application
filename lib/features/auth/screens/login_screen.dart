@@ -2,17 +2,17 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:one_to_one_chat_app/common/constants/colors.dart';
+import 'package:one_to_one_chat_app/common/constants/text.dart';
 import 'package:one_to_one_chat_app/common/utils/utils.dart';
 import 'package:one_to_one_chat_app/common/widgets/box/horizontal_box.dart';
+import 'package:one_to_one_chat_app/common/widgets/box/vertical_box.dart';
 import 'package:one_to_one_chat_app/features/auth/controllers/auth_controller.dart';
 
 import '../../../common/config/text_style.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  static const routeName = '/login-screen';
-
   const LoginScreen({super.key});
-
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -78,23 +78,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       isLoad = true;
     });
     if (country != null && phoneNumber.isNotEmpty) {
-      print(isLoad);
       ref
           .read(authControllerProvider)
-          .signInWithPhone(context, '+${country!.phoneCode}$phoneNumber');
+          .signInWithPhone(context, '${country!.phoneCode}$phoneNumber');
     } else if (country == null) {
       ref
           .read(authControllerProvider)
-          .signInWithPhone(context, '+${countrys.phoneCode}$phoneNumber');
+          .signInWithPhone(context, '${countrys.phoneCode}$phoneNumber');
     } else {
       showSnackBar(
           context: context, content: 'Please select your country code');
     }
     Future.delayed(const Duration(milliseconds: 2000), () {
-      isLoad = false;
-      setState(() {});
+      setState(() {
+        isLoad = false;
+      });
     });
     print("123$isLoad");
+  }
+
+  mobileNumberOnChanged(String value) {
+    if (value.isEmpty) {
+      isButtonEnable = false;
+      errortext = 'Enter your valid mobile number';
+      setState(() {});
+    } else if (value.length < 10) {
+      isButtonEnable = false;
+      errortext = 'Enter your valid mobile number';
+
+      setState(() {});
+    } else {
+      errortext = '';
+
+      isButtonEnable = true;
+      setState(() {});
+    }
   }
 
   @override
@@ -102,7 +120,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        // showAlertDialog(context);
         return false;
       },
       child: SafeArea(
@@ -113,22 +130,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                    onTap: () {
-                      // showAlertDialog(context);
-                    },
-                    child: const Icon(Icons.arrow_back_outlined)),
+                    onTap: () {}, child: const Icon(Icons.arrow_back_outlined)),
                 Text(
                   "Enter your phone number",
                   style: authScreenheadingStyle(),
                 ),
-                // const VerticalBox(height: 12),
-                // const VerticalBox(height: 24),
+                const VerticalBox(height: 24),
                 Text(
                   "Phone number",
                   style: textFieldHeadingStyle(),
                 ),
-                // TextButton(
-                //     onPressed: pickCountry, child: const Text("Pick country")),
                 const SizedBox(
                   height: 5,
                 ),
@@ -146,8 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           children: [
                             if (country != null)
                               Text(
-                                "+${country!.phoneCode}",
-                                // style: authScreensubTitleStyle(),
+                                country!.phoneCode,
                               )
                             else
                               Text(countrys.phoneCode),
@@ -188,23 +198,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           LengthLimitingTextInputFormatter(10),
                         ],
                         onChanged: (value) {
-                          if (value.isEmpty) {
-                            isButtonEnable = false;
-                            errortext = 'Enter your valid mobile number';
-                            setState(() {});
-                          } else if (value.length < 10) {
-                            isButtonEnable = false;
-                            errortext = 'Enter your valid mobile number';
-
-                            setState(() {});
-                          } else {
-                            errortext = '';
-
-                            isButtonEnable = true;
-                            setState(() {});
-                          }
+                          mobileNumberOnChanged(value);
                         },
-                        // style: authScreensubTitleStyle().copyWith(fontSize: 15),
                       ),
                     ),
                   ],
@@ -213,7 +208,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   errortext,
                   style: const TextStyle(color: Colors.red),
                 ),
-
                 const Spacer(),
                 isButtonEnable
                     ? InkWell(
@@ -223,13 +217,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(41),
-                                color: Colors.green),
+                                color: greenColor),
                             child: Center(
                                 child: isLoad
                                     ? const CircularProgressIndicator(
                                         color: Colors.white)
-                                    : const Text(
-                                        'Continue',
+                                    : Text(
+                                        conTinue,
                                       ))),
                       )
                     : InkWell(
@@ -244,8 +238,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: isLoad
                                   ? const CircularProgressIndicator(
                                       color: Colors.white)
-                                  : const Text(
-                                      'Continue',
+                                  : Text(
+                                      conTinue,
                                     )),
                         ),
                       )
@@ -256,75 +250,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
-
-//   showAlertDialog(BuildContext context) {
-//     showAnimatedDialog(
-//       context: context,
-//       barrierDismissible: true,
-
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           backgroundColor: Colors.white,
-//           title: const SizedBox.shrink(),
-//           content: const Padding(
-//             padding: EdgeInsets.only(left: 12, right: 12),
-//             child: Text(
-//               "Do you want to Exit app?",
-//               style: TextStyle(fontSize: 16),
-//             ),
-//           ),
-//           actions: [
-//             GestureDetector(
-//               onTap: () {
-//                 Navigator.pop(context);
-//               },
-//               child: Container(
-//                 height: getProportionateScreenHeight(44),
-//                 width: getProportionateScreenWidth(120),
-//                 decoration: BoxDecoration(
-//                     boxShadow: const [
-//                       BoxShadow(
-//                           color: Color.fromARGB(255, 187, 179, 179),
-//                           // offset: Offset(
-//                           //   20,
-//                           //   20,
-//                           // ),
-//                           blurRadius: 25),
-//                     ],
-//                     borderRadius: BorderRadius.circular(12),
-//                     color: const Color.fromRGBO(255, 255, 255, 1)),
-//                 child: const Center(child: Text("Cancel")),
-//               ),
-//             ),
-//             GestureDetector(
-//               onTap: () async {
-//                 SystemNavigator.pop();
-//               },
-//               child: Container(
-//                 height: getProportionateScreenHeight(44),
-//                 width: getProportionateScreenWidth(120),
-//                 decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     color: const Color.fromRGBO(254, 86, 49, 1)),
-//                 child: const Center(
-//                     child: Text(
-//                   "Confirm",
-//                   style: TextStyle(color: Colors.white),
-//                 )),
-//               ),
-//             ),
-//             SizedBox(
-//               width: getProportionateScreenWidth(5),
-//             )
-//           ],
-//         );
-//       },
-
-//       animationType: DialogTransitionType.size,
-
-//       curve: Curves.fastOutSlowIn,
-
-// // duration: const Duration(seconds: 1),
-//     );
-//   }
 }
